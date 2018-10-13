@@ -1,5 +1,5 @@
 ## Project: 3D Motion Planning
-CONDA ACTIVATE FCND
+
 ---
 # Required Steps:
 1. Load the 2.5D map in the colliders.csv file describing the environment.
@@ -158,6 +158,9 @@ For an extra challenge, consider implementing some of the techniques described i
 
 ---
 
+## Luigi's Playground - pleaes ignore below here
+
+CONDA ACTIVATE FCND
 Meanwhile, here's a picture of me flying through the trees!
 ![Forest Flying](./misc/in_the_trees.png)
 
