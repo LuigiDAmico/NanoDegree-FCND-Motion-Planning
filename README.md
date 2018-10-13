@@ -1,10 +1,6 @@
 ## Project: 3D Motion Planning
-
-
-
 CONDA ACTIVATE FCND
 ---
-
 # Required Steps:
 1. Load the 2.5D map in the colliders.csv file describing the environment.
 2. Discretize the environment into a grid or graph representation.
@@ -23,7 +19,6 @@ CONDA ACTIVATE FCND
 You are reading it - This is the file - Below I describe how I addressed each rubric point and where in my code each point is handled.
 
 ---
-
 ### Explain the Starter Code
 
 #### 1. Explain the functionality of what's provided in `motion_planning.py` and `planning_utils.py`
@@ -57,7 +52,6 @@ After all the waypoints are created, the TAKE OFF phase is initiated and the MP 
 Once all the waypoints are complete, the landing and disarming phases follow.
 
 ---
-
 ### Implementing Your Path Planning Algorithm
 
 #### 1. Set your global home position
@@ -71,7 +65,6 @@ Here you should read the first line of the csv file, extract lat0 and lon0 as fl
 ##### RESPONSE:
 
 ---
-
 #### 2. Set your current local position
 
 ##### CRITERIA DESCRIPTION:
@@ -83,7 +76,6 @@ Here as long as you successfully determine your local position relative to globa
 ##### RESPONSE:
 
 ---
-
 #### 3. Set grid start position from local position
 ##### CRITERIA DESCRIPTION:
 In the starter code, the start point for planning is hardcoded as map center. Change this to be your current local position.
@@ -97,7 +89,6 @@ Here as long as you successfully determine your local position relative to globa
 ##### RESPONSE:
 
 ---
-
 #### 4. Set grid goal position from geodetic coords
 ##### CRITERIA DESCRIPTION:
 In the starter code, the goal position is hardcoded as some location 10 m north and 10 m east of map center. Modify this to be set as some arbitrary position on the grid given any geodetic coordinates (latitude, longitude)
@@ -111,7 +102,6 @@ Here as long as you successfully determine your local position relative to globa
 ##### RESPONSE:
 
 ---
-
 #### 5. Modify A* to include diagonal motion (or replace A* altogether)
 ##### CRITERIA DESCRIPTION:
 Write your search algorithm. Minimum requirement here is to add diagonal motions to the A* implementation provided, and assign them a cost of sqrt(2). However, you're encouraged to get creative and try other methods from the lessons and beyond!
@@ -123,7 +113,6 @@ Minimal requirement here is to modify the code in planning_utils() to update the
 ##### RESPONSE:
 
 ---
-
 #### 6. Cull waypoints 
 ##### CRITERIA DESCRIPTION:
 Cull waypoints from the path you determine using search.
@@ -137,7 +126,6 @@ For this step you can use a collinearity test or ray tracing method like Bresenh
 ##### RESPONSE:
 
 ---
-
 ### Execute the flight
 #### 1. Does it work?
 ##### CRITERIA DESCRIPTION: 
@@ -150,15 +138,13 @@ At the moment there is some mismatch between the colliders map and actual buildi
 
 It works!
 
----
-  
+---  
 # Extra Challenges: Real World Planning
 
 For an extra challenge, consider implementing some of the techniques described in the "Real World Planning" lesson. You could try implementing a vehicle model to take dynamic constraints into account, or implement a replanning method to invoke if you get off course or encounter unexpected obstacles.
 
 
 ---
-
 
 Meanwhile, here's a picture of me flying through the trees!
 ![Forest Flying](./misc/in_the_trees.png)

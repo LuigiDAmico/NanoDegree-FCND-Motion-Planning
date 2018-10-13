@@ -1,6 +1,8 @@
 from enum import Enum
 from queue import PriorityQueue
 import numpy as np
+import utm
+
 
 
 def create_grid(data, drone_altitude, safety_distance):
@@ -143,8 +145,16 @@ def a_star(grid, h, start, goal):
         print('**********************') 
     return path[::-1], path_cost
 
-
-
 def heuristic(position, goal_position):
     return np.linalg.norm(np.array(position) - np.array(goal_position))
 
+# global_to_local should ideally be placed in a more generic utils.py - for convenience and project size it will remain here.
+def global_to_local(global_position, global_home):
+    
+    (east_home, north_home, _, _) = utm.from_latlon(global_home[1], global_home[0])
+    
+    (east, north, _, _) = utm.from_latlon(global_position[1], global_position[0])
+                                          
+    local_position = numpy.array([north - north_home, east - east_home, -(global_position[2] - global_home[2])])
+    
+    return local_position

@@ -4,6 +4,7 @@ import msgpack
 from enum import Enum, auto
 
 import numpy as np
+import csv
 
 from planning_utils import a_star, heuristic, create_grid
 from udacidrone import Drone
@@ -114,6 +115,16 @@ class MotionPlanning(Drone):
         data = msgpack.dumps(self.waypoints)
         self.connection._master.write(data)
 
+    def getFirstRowOfCSV(self):
+
+        with open('colliders.csv', 'r') as f:
+            reader = csv.reader(f, delimiter=',')
+            # get header from first row
+            header = next(reader)
+       
+        # we substringing and assuming the header always is in a standard format of: "lat0 ff.fff, lan0 ff.fff" where ff.fff are numerics of any length and sign (positive or negative)
+        return [float(header[0][5:]),float(header[1][6:])]
+        
     def plan_path(self):
         self.flight_state = States.PLANNING
         print("Searching for a path ...")
@@ -122,16 +133,43 @@ class MotionPlanning(Drone):
 
         self.target_position[2] = TARGET_ALTITUDE
 
+        data = np.loadtxt('colliders.csv', delimiter=',', dtype='Float64', skiprows=2)
+
         # TODO: read lat0, lon0 from colliders into floating point values
+        print("# TODO: read lat0, lon0 from colliders into floating point values")
+        lat0, lon0 = self.getFirstRowOfCSV()
+        print("lat0 = " +  str(lat0))
+        print("lon0 = " +  str(lon0))
         
         # TODO: set home position to (lon0, lat0, 0)
-
+        print("# TODO: set home position to (lon0, lat0, 0)")
+        self.set_home_position(lon0, lat0, 0)
+        print("# home position set")
+              
         # TODO: retrieve current global position
- 
+        print("# TODO: retrieve current global position")
+        globalPositionLon = self._longitude 
+        globalPositionLat = self._latitude 
+        globalPositionAlt = self._altitude
+        print("globalPositionLon = " + str(globalPositionLon))
+        print("globalPositionLat = " + str(globalPositionLat))
+        print("globalPositionAlt = " + str(globalPositionAlt))
+
         # TODO: convert to current local position using global_to_local()
-        
+        print("# TODO: convert to current local position using global_to_local()")
+        geodetic_current_coordinates = [-122.079465, 37.393037, 30]
+        geodetic_home_coordinates = [-122.108432, 37.400154, 20]
+        print("geodetic_current_coordinates " + str(geodetic_current_coordinates))
+        print("geodetic_home_coordinates " + str(geodetic_home_coordinates))
+        local_position = global_to_local(geodetic_current_coordinates, geodetic_home_coordinates)
+        print("local_position " + str(local_position))
+
         print('global home {0}, position {1}, local position {2}'.format(self.global_home, self.global_position,
                                                                          self.local_position))
+
+        self.flight_state = "PAUSE"
+        return
+        
         # Read in obstacle map
         data = np.loadtxt('colliders.csv', delimiter=',', dtype='Float64', skiprows=2)
         
