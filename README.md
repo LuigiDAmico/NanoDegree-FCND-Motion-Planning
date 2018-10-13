@@ -30,6 +30,7 @@ This is it the file - Below I describe how I addressed each rubric point and whe
 
 ##### CRITERIA SPEC: The goal here is to understand the starter code. We've provided you with a functional yet super basic path planning implementation and in this step, your task is to explain how it works! Have a look at the code, particularly in the plan_path() method and functions provided in planning_utils.py and describe what's going on there. This need not be a lengthy essay, just a concise description of the functionality of the starter code.
 
+##### RESPONSE:
 
 Confirmed that motion_planning.py (MP) is a modified version of the backyard_flyer_solution.py (BFS) since their code and resultant outcomes are different.
 
