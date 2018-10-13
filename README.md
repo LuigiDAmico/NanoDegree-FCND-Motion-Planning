@@ -42,7 +42,6 @@ Both BFS and MP scripts work.
 And here is a lovely picture of the MP script end result - it also shows the path taken.
 ![motion_planning.py works!](./misc/MP_ScreenShot_ItWorks.png)
 
-
 I will briefly highly the key differences between the BFS (backyard_fyler_solution.py) and MP (motion_planning.py) .
 
 The MP first of all imports planning_utils.py where all the 'juicy' bits are happening.
