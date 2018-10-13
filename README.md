@@ -5,7 +5,7 @@
 CONDA ACTIVATE FCND
 ---
 
-# Required Steps for a Passing Submission:
+# Required Steps:
 1. Load the 2.5D map in the colliders.csv file describing the environment.
 2. Discretize the environment into a grid or graph representation.
 3. Define the start and goal locations.
@@ -20,7 +20,7 @@ CONDA ACTIVATE FCND
 
 #### 1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  You can submit your writeup as markdown or pdf.  
 
-This is it the file - Below I describe how I addressed each rubric point and where in my code each point is handled.
+You are reading it - This is the file - Below I describe how I addressed each rubric point and where in my code each point is handled.
 
 ### Explain the Starter Code
 
@@ -43,8 +43,15 @@ And here is a lovely picture of the MP script end result - it also shows the pat
 ![motion_planning.py works!](./misc/MP_ScreenShot_ItWorks.png)
 
 
-These scripts contain a basic planning implementation that includes...
+I will briefly highly the key differences between the BFS (backyard_fyler_solution.py) and MP (motion_planning.py) .
 
+The MP first of all imports planning_utils.py where all the 'juicy' bits are happening.
+MP has an extra drone 'State' called PLANNING, which is utilized after we have 'armed' and 'taken control' of the drone.
+The PLANNING phase is where all the magic happens, the plan_path() is called at this flight_stage.
+In the plan_path() we set our current location, set our current target/goal location (+10, +10), and plan our flight path from start to goal location --> by creating an array of waypoints in the planning_utils.py a_star() method.  The plan_path() ends by visualizing all the waypoints planned on the actual map for visual reference.
+
+After all the waypoints are created, the TAKE OFF phase is initiated and the MP runs through the various flight phases 'popping' each waypoint off the array as it goes along.
+Once all the waypoints are complete, the landing and disarming phases follow.
 
 
 
