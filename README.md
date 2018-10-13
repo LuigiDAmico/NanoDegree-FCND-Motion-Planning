@@ -63,6 +63,8 @@ In the starter code, we assume that the home position is where the drone first i
 Here you should read the first line of the csv file, extract lat0 and lon0 as floating point values and use the self.set_home_position() method to set global home.
 
 ##### RESPONSE:
+I created a new local function/method/defintion called getFirstRowOfCSV, it returns an array containing lat0 and lon0
+After that I called the following function self.set_home_position(lon, lat, 0)
 
 ---
 #### 2. Set your current local position
@@ -74,6 +76,10 @@ In the starter code, we assume the drone takes off from map center, but you'll n
 Here as long as you successfully determine your local position relative to global home you'll be all set. Explain briefly how you accomplished this in your code.
 
 ##### RESPONSE:
+First I got the lat, lon and altitude.
+I then set geodetic arrays for current location and home location.
+Using the built in function global_to_local to convert from GPS to local NED coords.
+PS: I did not set self.global_home
 
 ---
 #### 3. Set grid start position from local position
@@ -83,10 +89,9 @@ In the starter code, the start point for planning is hardcoded as map center. Ch
 ##### CRITERIA SPEC:
 This is another step in adding flexibility to the start location. As long as it works you're good to go!
 
-Here as long as you successfully determine your local position relative to global home you'll be all set. Explain briefly how you accomplished this in your code.
-
-
 ##### RESPONSE:
+The location of where drone is at the time the automation code is executed, is taken as the grid start position.
+It works and we ready to go.
 
 ---
 #### 4. Set grid goal position from geodetic coords
@@ -99,6 +104,9 @@ This step is to add flexibility to the desired goal location. Should be able to 
 Here as long as you successfully determine your local position relative to global home you'll be all set. Explain briefly how you accomplished this in your code.
 
 ##### RESPONSE:
+Created two global variables called: TARGET_LON, TARGET_LAT
+I used the global_to_local method to convert to NED.
+I then set the grid_goal co-ords using the offset and the NED
 
 ---
 #### 5. Modify A* to include diagonal motion (or replace A* altogether)

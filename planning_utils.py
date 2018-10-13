@@ -1,5 +1,5 @@
 from enum import Enum
-from queue import PriorityQueue
+from queue import PriorityQueue, LifoQueue
 import numpy as np
 import utm
 
@@ -106,6 +106,15 @@ def valid_actions(grid, current_node):
     
     return valid_actions
 
+# Is this location obstructing a buildling
+def isLocationValid(grid, current_node):
+    n, m = grid.shape[0] - 1, grid.shape[1] - 1
+    x, y = current_node
+
+    if x < 0 or x > n or grid[x, y] == 1 or y < 0 or y > m:
+        return False
+
+    return True
 
 def a_star(grid, h, start, goal):
 
@@ -128,7 +137,7 @@ def a_star(grid, h, start, goal):
         vEnd = "\r"
         if counter%50 == 0:
             vEnd = "\n"
-        print(">> " + str(item) + "\t" + str(queue.qsize()), end=vEnd, flush="True")
+        print(">> " + str(item) + "\t" + str(queue.qsize()) + "\t" + str(len(branch)), end=vEnd, flush="True")
               
         current_node = item[1]
         if current_node == start:
@@ -154,7 +163,6 @@ def a_star(grid, h, start, goal):
                     queue.put((queue_cost, next_node))
 
     print("branch len " + str(len(branch)))
-    print("path_cost " + str(path_cost))
     
     if found:
         # retrace steps
@@ -176,11 +184,10 @@ def a_star(grid, h, start, goal):
     print("path_cost " + str(path_cost))
     print("path len " + str(len(path)))
 
-    # for vCurrentNode in path:
-    #     cells = list(bresenham(line[0], line[1], line[2], line[3]))
-    #     print(cells)
+    finalPath = luigiham(path, grid)
+    
+    return finalPath[::-1], path_cost
 
-    return path[::-1], path_cost
 
 def heuristic(position, goal_position):
     return np.linalg.norm(np.array(position) - np.array(goal_position))
@@ -213,3 +220,66 @@ def prune_path(path):
         else:
             i += 1
     return pruned_path  
+
+
+# LuigiHam is a combination of Luigi's thinking and Bresenham's formulae.
+# LuigiHam accepts a path array, representing a safe path from start to finish.
+# Each  array item (called a point) contains an X & Y co-ord
+# LuigiHam attempts direct paths between the furtherest two points
+# LuigiHam returns an updated path array (same structure as path), with direct roots
+# LuigiHam accepts a grid, so that it is able to understand where obstructions are.
+# The cleaner version of this code does not accept the grid and expects the isLocationValid() method to be self-aware of the grid variable
+# This version needs to be updated, because it always 'always' has two middle point, even tho not necessary. The solution below create this by side-effect design.
+def luigiham(path, grid):
+    finalPath = []
+    print("LuigiHam TIME")
+    customPath = [p for p in path]
+    
+    customPathLen = len(customPath)
+    print("customPathLen ", customPathLen)
+
+    i = 0
+    while i < customPathLen: #start to goal
+        p1 = customPath[i]
+
+        j = customPathLen-1    
+        while j > i: #goal to start
+            p2 = customPath[j] 
+
+            cells = list(bresenham(p1[0], p1[1], p2[0], p2[1]))
+            newDirectPathHasNoObstructions = True
+            for cell in cells:
+                if (isLocationValid(grid, cell) == False):
+                    newDirectPathHasNoObstructions = False
+                    break
+
+            if newDirectPathHasNoObstructions == True:
+                finalPath.append(p1)
+                finalPath.append(p2)
+                i = j
+                break
+            else:
+                j = j - 1
+       
+        i = i + 1
+
+    print("LuigiHam TIME FINISHED")
+    print("len(finalPath) ", len(finalPath))
+    return finalPath
+
+
+def l_star(grid, start, goal, numberOfRoutesToFind):
+
+   # l_start is supposed to be a a_star replacment, requires less processing power and to be immensly quicker
+
+   # The implementation takes the luigiham concept into play.
+
+   # The start and goal co-ordinates are compared.
+   # L_Star attempts to move the start co-ordinates in a favourable direction towards the goal co-ordinates.
+   # It does do some guess work in the instance that two directions have the same "benefit" in direction towards the goal
+   # L_star can look for more roots, once a first route has been found.
+   # LuigiHam gets implemented towards the end of l_star
+   # L_star attempts LuigiHam logic at every new point obtained
+
+   return "ommitted"
+   

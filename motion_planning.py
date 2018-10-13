@@ -89,9 +89,9 @@ class MotionPlanning(Drone):
 
     def waypoint_transition(self):
         self.flight_state = States.WAYPOINT
-        print("waypoint transition")
+        print("waypoint transition", end="\r")
         self.target_position = self.waypoints.pop(0)
-        print('target position', self.target_position)
+        print('target position', self.target_position, end="\r")
         self.cmd_position(self.target_position[0], self.target_position[1], self.target_position[2], self.target_position[3])
 
     def landing_transition(self):
@@ -129,8 +129,15 @@ class MotionPlanning(Drone):
     def plan_path(self):
         self.flight_state = States.PLANNING
         print("Searching for a path ...")
-        TARGET_LAT = 37.792653
-        TARGET_LON = -122.397075
+        
+        #NearBy
+        # TARGET_LAT = 37.792653
+        # TARGET_LON = -122.397075
+
+        #around the corner
+        TARGET_LAT = 37.792504
+        TARGET_LON = -122.397980
+        
         TARGET_ALTITUDE = 5
         SAFETY_DISTANCE = 5
 
@@ -213,6 +220,7 @@ class MotionPlanning(Drone):
         waypoints = [[p[0] + north_offset, p[1] + east_offset, TARGET_ALTITUDE, 0] for p in path]
         # Set self.waypoints
         self.waypoints = waypoints
+
         # TODO: send waypoints to sim (this is just for visualization of waypoints)
         self.send_waypoints()
 
