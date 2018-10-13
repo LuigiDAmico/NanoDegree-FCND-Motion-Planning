@@ -117,6 +117,10 @@ Write your search algorithm. Minimum requirement here is to add diagonal motions
 Minimal requirement here is to modify the code in planning_utils() to update the A* implementation to include diagonal motions on the grid that have a cost of sqrt(2), but more creative solutions are welcome. Explain the code you used to accomplish this step.
 
 ##### RESPONSE:
+The Action class in planning.utils.py got 4 new additions namely: NW, NE, SW, SE and their associated costs and logic applied in the 'valid_actions' definition/function/method.  I implemented a LuigiHam() that gets called by the a_star() which has method level comments that details some of the thinking.
+I did not have time to complete my l_star() - however wrote down the thinking.
+
+
 
 ---
 #### 6. Cull waypoints 
@@ -130,6 +134,8 @@ Here as long as you successfully determine your local position relative to globa
 For this step you can use a collinearity test or ray tracing method like Bresenham. The idea is simply to prune your path of unnecessary waypoints. Explain the code you used to accomplish this step.
 
 ##### RESPONSE:
+I took the same collinearity functionaliy from my earlier excercise and included the functions in planning_utils.
+The prune_path method got called from motion_planning.py
 
 ---
 ### Execute the flight
@@ -141,8 +147,8 @@ This is simply a check on whether it all worked. Send the waypoints and the auto
 At the moment there is some mismatch between the colliders map and actual buildings in the scene. To ensure success build in a 5+ m safety margin around obstacles. Try some different goal locations. Also try starting from a different point in the city. Your reviewer will also try some random locations so be sure to test your solution! There is no firm constraint or requirement on how accurately you land exactly on the goal location. Just so long as your planner functions as expected.
 
 ##### RESPONSE:
-
 It works!
+However "long missions" (eg: 2-3 blocks away) gives a timeout error as follows: "ConnectionAbortedError: [WinError 10053] An established connection was aborted by the software in your host machine".
 
 ---  
 # Extra Challenges: Real World Planning
