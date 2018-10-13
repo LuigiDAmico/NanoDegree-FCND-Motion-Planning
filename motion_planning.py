@@ -117,7 +117,7 @@ class MotionPlanning(Drone):
         self.connection._master.write(data)
 
     def getFirstRowOfCSV(self):
-
+        # various google searches and stackoverflow resulted in this method.
         with open('colliders.csv', 'r') as f:
             reader = csv.reader(f, delimiter=',')
             # get header from first row
