@@ -40,7 +40,7 @@ The MP flies the drone in jagged step formation.
 Both BFS and MP scripts work.
 
 And here is a lovely picture of the MP script end result - it also shows the path taken.
-![Map of SF](./misc/1_MP_ScreenShot_ItWorks.png)
+![motion_planning.py works!](./misc/MP_ScreenShot_ItWorks.png)
 
 
 These scripts contain a basic planning implementation that includes...
