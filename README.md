@@ -22,13 +22,17 @@ CONDA ACTIVATE FCND
 
 You are reading it - This is the file - Below I describe how I addressed each rubric point and where in my code each point is handled.
 
+---
+
 ### Explain the Starter Code
 
 #### 1. Explain the functionality of what's provided in `motion_planning.py` and `planning_utils.py`
 
-##### CRITERIA DESCRIPTION: Test that motion_planning.py is a modified version of backyard_flyer_solution.py for simple path planning. Verify that both scripts work. Then, compare them side by side and describe in words how each of the modifications implemented in motion_planning.py is functioning.
+##### CRITERIA DESCRIPTION: 
+Test that motion_planning.py is a modified version of backyard_flyer_solution.py for simple path planning. Verify that both scripts work. Then, compare them side by side and describe in words how each of the modifications implemented in motion_planning.py is functioning.
 
-##### CRITERIA SPEC: The goal here is to understand the starter code. We've provided you with a functional yet super basic path planning implementation and in this step, your task is to explain how it works! Have a look at the code, particularly in the plan_path() method and functions provided in planning_utils.py and describe what's going on there. This need not be a lengthy essay, just a concise description of the functionality of the starter code.
+##### CRITERIA SPEC: 
+The goal here is to understand the starter code. We've provided you with a functional yet super basic path planning implementation and in this step, your task is to explain how it works! Have a look at the code, particularly in the plan_path() method and functions provided in planning_utils.py and describe what's going on there. This need not be a lengthy essay, just a concise description of the functionality of the starter code.
 
 ##### RESPONSE:
 
@@ -52,44 +56,101 @@ In the plan_path() we set our current location, set our current target/goal loca
 After all the waypoints are created, the TAKE OFF phase is initiated and the MP runs through the various flight phases 'popping' each waypoint off the array as it goes along.
 Once all the waypoints are complete, the landing and disarming phases follow.
 
-
-
+---
 
 ### Implementing Your Path Planning Algorithm
 
 #### 1. Set your global home position
-Here students should read the first line of the csv file, extract lat0 and lon0 as floating point values and use the self.set_home_position() method to set global home. Explain briefly how you accomplished this in your code.
 
+##### CRITERIA DESCRIPTION:
+In the starter code, we assume that the home position is where the drone first initializes, but in reality you need to be able to start planning from anywhere. Modify your code to read the global home location from the first line of the colliders.csv file and set that position as global home (self.set_home_position())
 
-And here is a lovely picture of our downtown San Francisco environment from above!
-![Map of SF](./misc/map.png)
+##### CRITERIA SPEC:
+Here you should read the first line of the csv file, extract lat0 and lon0 as floating point values and use the self.set_home_position() method to set global home.
+
+##### RESPONSE:
+
+---
 
 #### 2. Set your current local position
+
+##### CRITERIA DESCRIPTION:
+In the starter code, we assume the drone takes off from map center, but you'll need to be able to takeoff from anywhere. Retrieve your current position in geodetic coordinates from self._latitude, self._longitude and self._altitude. Then use the utility function global_to_local() to convert to local position (using self.global_home as well, which you just set)
+
+##### CRITERIA SPEC:
+Here as long as you successfully determine your local position relative to global home you'll be all set. Explain briefly how you accomplished this in your code.
+
+##### RESPONSE:
+
+---
+
+#### 3. Set grid start position from local position
+##### CRITERIA DESCRIPTION:
+In the starter code, the start point for planning is hardcoded as map center. Change this to be your current local position.
+
+##### CRITERIA SPEC:
+This is another step in adding flexibility to the start location. As long as it works you're good to go!
+
 Here as long as you successfully determine your local position relative to global home you'll be all set. Explain briefly how you accomplished this in your code.
 
 
-Meanwhile, here's a picture of me flying through the trees!
-![Forest Flying](./misc/in_the_trees.png)
+##### RESPONSE:
 
-#### 3. Set grid start position from local position
-This is another step in adding flexibility to the start location. As long as it works you're good to go!
+---
 
 #### 4. Set grid goal position from geodetic coords
+##### CRITERIA DESCRIPTION:
+In the starter code, the goal position is hardcoded as some location 10 m north and 10 m east of map center. Modify this to be set as some arbitrary position on the grid given any geodetic coordinates (latitude, longitude)
+
+##### CRITERIA SPEC:
 This step is to add flexibility to the desired goal location. Should be able to choose any (lat, lon) within the map and have it rendered to a goal location on the grid.
 
+Here as long as you successfully determine your local position relative to global home you'll be all set. Explain briefly how you accomplished this in your code.
+
+
+##### RESPONSE:
+
+---
+
 #### 5. Modify A* to include diagonal motion (or replace A* altogether)
+##### CRITERIA DESCRIPTION:
+Write your search algorithm. Minimum requirement here is to add diagonal motions to the A* implementation provided, and assign them a cost of sqrt(2). However, you're encouraged to get creative and try other methods from the lessons and beyond!
+
+##### CRITERIA SPEC:
+Here as long as you successfully determine your local position relative to global home you'll be all set. Explain briefly how you accomplished this in your code.
 Minimal requirement here is to modify the code in planning_utils() to update the A* implementation to include diagonal motions on the grid that have a cost of sqrt(2), but more creative solutions are welcome. Explain the code you used to accomplish this step.
 
+##### RESPONSE:
+
+---
+
 #### 6. Cull waypoints 
+##### CRITERIA DESCRIPTION:
+Cull waypoints from the path you determine using search.
+
+##### CRITERIA SPEC:
+For this step you can use a collinearity test or ray tracing method like Bresenham. The idea is simply to prune your path of unnecessary waypoints. In your writeup, explain the code you used to accomplish this step.
+
+Here as long as you successfully determine your local position relative to global home you'll be all set. Explain briefly how you accomplished this in your code.
 For this step you can use a collinearity test or ray tracing method like Bresenham. The idea is simply to prune your path of unnecessary waypoints. Explain the code you used to accomplish this step.
 
+##### RESPONSE:
 
+---
 
 ### Execute the flight
 #### 1. Does it work?
+##### CRITERIA DESCRIPTION: 
+This is simply a check on whether it all worked. Send the waypoints and the autopilot should fly you from start to goal!
+
+##### CRITERIA SPEC:
+At the moment there is some mismatch between the colliders map and actual buildings in the scene. To ensure success build in a 5+ m safety margin around obstacles. Try some different goal locations. Also try starting from a different point in the city. Your reviewer will also try some random locations so be sure to test your solution! There is no firm constraint or requirement on how accurately you land exactly on the goal location. Just so long as your planner functions as expected.
+
+##### RESPONSE:
+
 It works!
 
-
+---
   
 # Extra Challenges: Real World Planning
 
@@ -97,6 +158,14 @@ For an extra challenge, consider implementing some of the techniques described i
 
 
 ---
+
+
+Meanwhile, here's a picture of me flying through the trees!
+![Forest Flying](./misc/in_the_trees.png)
+
+And here is a lovely picture of our downtown San Francisco environment from above!
+![Map of SF](./misc/map.png)
+
 
 ![Quad Image](./misc/enroute.png)
 
