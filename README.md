@@ -106,7 +106,6 @@ Here as long as you successfully determine your local position relative to globa
 Write your search algorithm. Minimum requirement here is to add diagonal motions to the A* implementation provided, and assign them a cost of sqrt(2). However, you're encouraged to get creative and try other methods from the lessons and beyond!
 
 ##### CRITERIA SPEC:
-Here as long as you successfully determine your local position relative to global home you'll be all set. Explain briefly how you accomplished this in your code.
 Minimal requirement here is to modify the code in planning_utils() to update the A* implementation to include diagonal motions on the grid that have a cost of sqrt(2), but more creative solutions are welcome. Explain the code you used to accomplish this step.
 
 ##### RESPONSE:

@@ -58,6 +58,12 @@ class Action(Enum):
     EAST = (0, 1, 1)
     NORTH = (-1, 0, 1)
     SOUTH = (1, 0, 1)
+    NW = (-1, -1, 1.4)
+    NE = (-1, 1, 1.4)
+    SW = (1, -1, 1.4)
+    SE = (1, 1, 1.4)
+    
+
 
     @property
     def cost(self):
@@ -88,6 +94,16 @@ def valid_actions(grid, current_node):
     if y + 1 > m or grid[x, y + 1] == 1:
         valid_actions.remove(Action.EAST)
 
+    vActionSet = set(valid_actions)
+    if not((Action.NORTH in vActionSet) and (Action.WEST in vActionSet)):
+        valid_actions.remove(Action.NW)
+    if not((Action.NORTH in vActionSet) and (Action.EAST in vActionSet)):
+        valid_actions.remove(Action.NE)
+    if not((Action.SOUTH in vActionSet) and (Action.WEST in vActionSet)):
+        valid_actions.remove(Action.SW)
+    if not((Action.SOUTH in vActionSet) and (Action.EAST in vActionSet)):
+        valid_actions.remove(Action.SE)
+    
     return valid_actions
 
 
@@ -104,14 +120,17 @@ def a_star(grid, h, start, goal):
     
     # print("a*tt " + str(start) + "\t:: " + str(queue.qsize()))
 
+    counter = 0
     while not queue.empty():
         item = queue.get()
-        print(">> " + str(item) + "\t" + str(queue.qsize()), end="\zr", flush="True")
-        print(">> " + str(item) + "\t" + str(queue.qsize()), end="\zr", flush="True")
-        
 
+        counter = counter + 1
+        vEnd = "\r"
+        if counter%50 == 0:
+            vEnd = "\n"
+        print(">> " + str(item) + "\t" + str(queue.qsize()), end=vEnd, flush="True")
+              
         current_node = item[1]
-        print(current_node)
         if current_node == start:
             current_cost = 0.0
         else:              
@@ -133,10 +152,14 @@ def a_star(grid, h, start, goal):
                     visited.add(next_node)               
                     branch[next_node] = (branch_cost, current_node, action)
                     queue.put((queue_cost, next_node))
-              
+
+    print("branch len " + str(len(branch)))
+    print("path_cost " + str(path_cost))
+    
     if found:
         # retrace steps
         n = goal
+        print("goal branch " + str(branch[n]))
         path_cost = branch[n][0]
         path.append(goal)
         while branch[n][1] != start:
@@ -147,7 +170,16 @@ def a_star(grid, h, start, goal):
     else:
         print('**********************')
         print('Failed to find a path!')
-        print('**********************') 
+        print('**********************')
+
+
+    print("path_cost " + str(path_cost))
+    print("path len " + str(len(path)))
+
+    # for vCurrentNode in path:
+    #     cells = list(bresenham(line[0], line[1], line[2], line[3]))
+    #     print(cells)
+
     return path[::-1], path_cost
 
 def heuristic(position, goal_position):
