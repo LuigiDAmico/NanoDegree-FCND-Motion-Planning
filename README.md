@@ -1,6 +1,8 @@
 ## Project: 3D Motion Planning
-![Quad Image](./misc/enroute.png)
 
+
+
+CONDA ACTIVATE FCND
 ---
 
 # Required Steps for a Passing Submission:
@@ -18,7 +20,7 @@
 
 #### 1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  You can submit your writeup as markdown or pdf.  
 
-You're reading it! Below I describe how I addressed each rubric point and where in my code each point is handled.
+This is it the file - Below I describe how I addressed each rubric point and where in my code each point is handled.
 
 ### Explain the Starter Code
 
@@ -28,17 +30,23 @@ You're reading it! Below I describe how I addressed each rubric point and where 
 
 ##### CRITERIA SPEC: The goal here is to understand the starter code. We've provided you with a functional yet super basic path planning implementation and in this step, your task is to explain how it works! Have a look at the code, particularly in the plan_path() method and functions provided in planning_utils.py and describe what's going on there. This need not be a lengthy essay, just a concise description of the functionality of the starter code.
 
+
+Confirmed that motion_planning.py (MP) is a modified version of the backyard_flyer_solution.py (BFS) since their code and resultant outcomes are different.
+
+The BFS script flies the drone in a square shape.
+The MP flies the drone in jagged step formation.
+
+Both BFS and MP scripts work.
+
+And here is a lovely picture of the MP script end result - it also shows the path taken.
+![Map of SF](./misc/1_MP_ScreenShot_ItWorks.png)
+
+
 These scripts contain a basic planning implementation that includes...
 
-And here's a lovely image of my results (ok this image has nothing to do with it, but it's a nice example of how to include images in your writeup!)
-![Top Down View](./misc/high_up.png)
 
-Here's | A | Snappy | Table
---- | --- | --- | ---
-1 | `highlight` | **bold** | 7.41
-2 | a | b | c
-3 | *italic* | text | 403
-4 | 2 | 3 | abcd
+
+
 
 ### Implementing Your Path Planning Algorithm
 
@@ -80,4 +88,18 @@ It works!
 
 For an extra challenge, consider implementing some of the techniques described in the "Real World Planning" lesson. You could try implementing a vehicle model to take dynamic constraints into account, or implement a replanning method to invoke if you get off course or encounter unexpected obstacles.
 
+
+---
+
+![Quad Image](./misc/enroute.png)
+
+And here's a lovely image of my results (ok this image has nothing to do with it, but it's a nice example of how to include images in your writeup!)
+![Top Down View](./misc/high_up.png)
+
+Here's | A | Snappy | Table
+--- | --- | --- | ---
+1 | `highlight` | **bold** | 7.41
+2 | a | b | c
+3 | *italic* | text | 403
+4 | 2 | 3 | abcd
 
