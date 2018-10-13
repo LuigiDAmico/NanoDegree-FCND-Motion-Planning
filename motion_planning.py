@@ -6,11 +6,12 @@ from enum import Enum, auto
 import numpy as np
 import csv
 
-from planning_utils import a_star, heuristic, create_grid
+from planning_utils import a_star, heuristic, create_grid, prune_path
 from udacidrone import Drone
 from udacidrone.connection import MavlinkConnection
 from udacidrone.messaging import MsgID
 from udacidrone.frame_utils import global_to_local
+
 
 
 class States(Enum):
@@ -128,6 +129,8 @@ class MotionPlanning(Drone):
     def plan_path(self):
         self.flight_state = States.PLANNING
         print("Searching for a path ...")
+        TARGET_LAT = 37.792653
+        TARGET_LON = -122.397075
         TARGET_ALTITUDE = 5
         SAFETY_DISTANCE = 5
 
@@ -137,59 +140,73 @@ class MotionPlanning(Drone):
 
         # TODO: read lat0, lon0 from colliders into floating point values
         print("# TODO: read lat0, lon0 from colliders into floating point values")
-        lat0, lon0 = self.getFirstRowOfCSV()
-        print("lat0 = " +  str(lat0))
-        print("lon0 = " +  str(lon0))
-        
+        homeGPSLat, homeGPSLon = self.getFirstRowOfCSV()
+        print("homeGPSLon = " +  str(homeGPSLon))
+        print("homeGPSLat = " +  str(homeGPSLat))
+                
         # TODO: set home position to (lon0, lat0, 0)
         print("# TODO: set home position to (lon0, lat0, 0)")
-        self.set_home_position(lon0, lat0, 0)
+        self.set_home_position(homeGPSLon, homeGPSLat, 0)
         print("# home position set")
-              
+
         # TODO: retrieve current global position
         print("# TODO: retrieve current global position")
-        globalPositionLon = self._longitude 
-        globalPositionLat = self._latitude 
-        globalPositionAlt = self._altitude
-        print("globalPositionLon = " + str(globalPositionLon))
-        print("globalPositionLat = " + str(globalPositionLat))
-        print("globalPositionAlt = " + str(globalPositionAlt))
+        currentGPSLat = self._latitude 
+        currentGPSLon = self._longitude 
+        currentGPSAlt = self._altitude
+        print("currentGPSLon = " + str(currentGPSLon))
+        print("currentGPSLat = " + str(currentGPSLat))        
+        print("currentGPSAlt = " + str(currentGPSAlt))
 
         # TODO: convert to current local position using global_to_local()
         print("# TODO: convert to current local position using global_to_local()")
-        geodetic_current_coordinates = [-122.079465, 37.393037, 30]
-        geodetic_home_coordinates = [-122.108432, 37.400154, 20]
+        geodetic_current_coordinates = [currentGPSLon, currentGPSLat, currentGPSAlt]
+        geodetic_home_coordinates = [homeGPSLon, homeGPSLat, 0]
         print("geodetic_current_coordinates " + str(geodetic_current_coordinates))
         print("geodetic_home_coordinates " + str(geodetic_home_coordinates))
-        local_position = global_to_local(geodetic_current_coordinates, geodetic_home_coordinates)
-        print("local_position " + str(local_position))
+        local_coordinates_NED = global_to_local(geodetic_current_coordinates, geodetic_home_coordinates)
+        print("local_coordinates_NED " + str(local_coordinates_NED))
 
         print('global home {0}, position {1}, local position {2}'.format(self.global_home, self.global_position,
                                                                          self.local_position))
-
-        self.flight_state = "PAUSE"
-        return
-        
         # Read in obstacle map
         data = np.loadtxt('colliders.csv', delimiter=',', dtype='Float64', skiprows=2)
         
         # Define a grid for a particular altitude and safety margin around obstacles
         grid, north_offset, east_offset = create_grid(data, TARGET_ALTITUDE, SAFETY_DISTANCE)
         print("North offset = {0}, east offset = {1}".format(north_offset, east_offset))
-        # Define starting point on the grid (this is just grid center)
-        grid_start = (-north_offset, -east_offset)
-        # TODO: convert start position to current position rather than map center
         
+        # Define starting point on the grid (this is just grid center)
+        # grid_start = (-north_offset, -east_offset)
+        # print("original grid_start " + str(grid_start))
+
+        # TODO: convert start position to current position rather than map center
+        print("# TODO: convert start position to current position rather than map center")
+        grid_start = (int(-north_offset+local_coordinates_NED[0]), int(-east_offset+local_coordinates_NED[1]))
+        print("Overriding start location to " + str(grid_start))
+
         # Set goal as some arbitrary position on the grid
-        grid_goal = (-north_offset + 120, -east_offset + 160)
+        # grid_goal = (-north_offset + 10, -east_offset + 20)
+        
         # TODO: adapt to set goal as latitude / longitude position and convert
+        geodetic_goal_cordinates = [TARGET_LON, TARGET_LAT , TARGET_ALTITUDE] # center of MAP
+        print("geodetic_goal_cordinates " + str(geodetic_goal_cordinates))
+        goal_coordinates_NED = global_to_local(geodetic_goal_cordinates, geodetic_home_coordinates)
+        print("goal_coordinates_NED " + str(goal_coordinates_NED))
+        grid_goal = (int(-north_offset+goal_coordinates_NED[0]), int(-east_offset+goal_coordinates_NED[1]))
+        print("grid_goal" + str(grid_goal))
 
         # Run A* to find a path from start to goal
         # TODO: add diagonal motions with a cost of sqrt(2) to your A* implementation
         # or move to a different search space such as a graph (not done here)
+
         print('Local Start and Goal: ', grid_start, grid_goal)
         path, _ = a_star(grid, heuristic, grid_start, grid_goal)
+        
         # TODO: prune path to minimize number of waypoints
+        print("path len before pruning " + str(len(path)))
+        path = prune_path(path)
+        print("path len after pruning " + str(len(path)))
         # TODO (if you're feeling ambitious): Try a different approach altogether!
 
         # Convert path to waypoints

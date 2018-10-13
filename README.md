@@ -98,7 +98,6 @@ This step is to add flexibility to the desired goal location. Should be able to 
 
 Here as long as you successfully determine your local position relative to global home you'll be all set. Explain briefly how you accomplished this in your code.
 
-
 ##### RESPONSE:
 
 ---

@@ -3,6 +3,7 @@ from queue import PriorityQueue
 import numpy as np
 import utm
 
+from bresenham import bresenham
 
 
 def create_grid(data, drone_altitude, safety_distance):
@@ -101,13 +102,16 @@ def a_star(grid, h, start, goal):
     branch = {}
     found = False
     
-    print("a*tt " + str(start) + "\t:: " + str(queue.qsize()))
+    # print("a*tt " + str(start) + "\t:: " + str(queue.qsize()))
 
     while not queue.empty():
         item = queue.get()
-        print("a* " + str(item) + "\t:: " + str(queue.qsize()))
+        print(">> " + str(item) + "\t" + str(queue.qsize()), end="\zr", flush="True")
+        print(">> " + str(item) + "\t" + str(queue.qsize()), end="\zr", flush="True")
+        
 
         current_node = item[1]
+        print(current_node)
         if current_node == start:
             current_cost = 0.0
         else:              
@@ -136,6 +140,7 @@ def a_star(grid, h, start, goal):
         path_cost = branch[n][0]
         path.append(goal)
         while branch[n][1] != start:
+
             path.append(branch[n][1])
             n = branch[n][1]
         path.append(branch[n][1])
@@ -148,13 +153,31 @@ def a_star(grid, h, start, goal):
 def heuristic(position, goal_position):
     return np.linalg.norm(np.array(position) - np.array(goal_position))
 
-# global_to_local should ideally be placed in a more generic utils.py - for convenience and project size it will remain here.
-def global_to_local(global_position, global_home):
+
+def point(p):
+    return np.array([p[0], p[1], 1.]).reshape(1, -1)
+
+def collinearity_check(p1, p2, p3, epsilon=1e-6):   
+    m = np.concatenate((p1, p2, p3), 0)
+    det = np.linalg.det(m)
+    return abs(det) < epsilon
+
+def prune_path(path):
+    pruned_path = [p for p in path]
     
-    (east_home, north_home, _, _) = utm.from_latlon(global_home[1], global_home[0])
-    
-    (east, north, _, _) = utm.from_latlon(global_position[1], global_position[0])
-                                          
-    local_position = numpy.array([north - north_home, east - east_home, -(global_position[2] - global_home[2])])
-    
-    return local_position
+    i = 0
+    while i < len(pruned_path) - 2:
+        p1 = point(pruned_path[i])
+        p2 = point(pruned_path[i+1])
+        p3 = point(pruned_path[i+2])
+        
+        # If the 3 points are in a line remove the 2nd point.
+        # The 3rd point now becomes and 2nd point and the
+        #  check is redone with a new third point on the next iteration.
+        if collinearity_check(p1, p2, p3):
+            # Something subtle here but we can mutate `pruned_path`
+            # freely because the length of the list is check on every iteration.
+            pruned_path.remove(pruned_path[i+1])
+        else:
+            i += 1
+    return pruned_path  
